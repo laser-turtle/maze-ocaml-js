@@ -1,0 +1,13 @@
+(env
+  (dev
+   (flags (:standard)))
+  (release
+   (flags (:standard))))
+
+(executables
+    (names maze)
+    (public_names maze.exe)
+    (libraries core_kernel js_of_ocaml js_of_ocaml-lwt js_of_ocaml-lwt.graphics js_of_ocaml-compiler.runtime.graphics)
+    (preprocess (pps js_of_ocaml-ppx))
+    )
+
