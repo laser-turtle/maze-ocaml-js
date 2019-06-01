@@ -114,11 +114,6 @@ let pick_neighbor maze coord =
         Picked (get_coord_offset coord dir)
 ;;
 
-type maze_bundle = {
-    maze : maze;
-    one_step : unit -> bool;
-}
-
 type algorithm = BreadthFirstSearch
                | DepthFirstSearch
                | Randomized
@@ -149,6 +144,11 @@ let get_algorithm lst = function
     }
 ;;
 
+type maze_bundle = {
+    maze : maze;
+    one_step : unit -> bool;
+}
+
 let make_maze_path algorithm w h =
     let maze = make_maze w h in
     let active = DL.create () in
@@ -170,7 +170,7 @@ let make_maze_path algorithm w h =
 
     let pick_random () =
         let elt = algorithm.pick() in
-        { coord=DL.Elt.value elt; elt}
+        { coord=DL.Elt.value elt; elt }
     in
 
     insert_active start_coord;
@@ -264,7 +264,7 @@ let _ =
         List.iteri ~f:(fun index (_, name) ->
             let opt = Html.createOption Html.document in
             opt##setAttribute Js.(string "value") Js.(string Int.(to_string index));
-            Js_utils.setTextContent opt name;
+            setTextContent opt name;
             Dom.appendChild select_algorithm opt;
         ) select_items;
 
@@ -284,6 +284,7 @@ let _ =
                 start_btn##click;
             );
         in
+
         draw_maze (module G) !bundle.maze;
 
         let clear_timeout() =
@@ -296,18 +297,19 @@ let _ =
             if !running then (
                 running := false;
                 clear_timeout();
-                Js_utils.setTextContent start_btn "Start";
+                setTextContent start_btn "Start";
             ) else (
                 running := true;
-                Js_utils.setTextContent start_btn "Stop";
+                setTextContent start_btn "Stop";
                 Html.setTimeout loop 0. |> ignore;
             );
             Js._false
         );
+
         reset_btn##.onclick := Html.handler (fun _ ->
             running := false;
             clear_timeout();
-            start_btn##.textContent := Js.(string "Start") |> Js.Opt.return;
+            setTextContent start_btn "Start";
             let algorithm =
                 select_algorithm##.selectedIndex
                 |> List.nth_exn select_items
@@ -317,5 +319,6 @@ let _ =
             draw_maze (module G) !bundle.maze;
             Js._false
         );
+
         Js._false
     );
